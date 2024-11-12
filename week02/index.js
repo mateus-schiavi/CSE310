@@ -3,11 +3,10 @@ const axios = require('axios');
 const path = require('path');
 
 const app = express();
-const port = 3000;
 
 // Configuração para processar requisições POST com JSON
 app.use(express.json());
-
+const PORT = 5000;
 // Configurar o servidor para servir arquivos estáticos (HTML, JS, CSS)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -57,7 +56,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Iniciar o servidor Express na porta 4000
+
 app.listen(port, () => {
-    console.log(`Servidor rodando em http://localhost:${port}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
