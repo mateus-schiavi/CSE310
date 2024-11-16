@@ -6,21 +6,21 @@ const { getExchangeRates } = require('./exchangeRate');
 const { validateRequest } = require('./validator');
 const app = express();
 
-// Configuração para processar requisições POST com JSON
+// Middleware to process POST requests with JSON
 app.use(express.json());
 const PORT = 5000;
-// Configurar o servidor para servir arquivos estáticos (HTML, JS, CSS)
+// Configure the server to serve static files (HTML, JS, CSS)
 app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/convert', async (req, res) => {
     let { amount, fromCurrency, toCurrency } = req.body;
 
-    // Verifique se o valor foi passado como string com vírgula e converta para ponto
+    // Check if the value is passed as a string with a comma and convert it to a dot
     if (typeof amount === 'string') {
         amount = parseFloat(amount.replace(',', '.'));
     }
 
-    // Validação de parâmetros (verificando se é um valor numérico e válido)
+    // Validate parameters (checking if it's a numeric and valid value)
     const error = validateRequest(amount, fromCurrency, toCurrency);
     if (error) {
         return res.status(400).json({ error });
@@ -30,25 +30,25 @@ app.post('/convert', async (req, res) => {
         const rates = await getExchangeRates();
 
         if (!rates) {
-            return res.status(500).json({ error: 'Erro ao buscar as taxas de câmbio' });
+            return res.status(500).json({ error: 'Error fetching exchange rates' });
         }
 
         const fromRate = rates[fromCurrency];
         const toRate = rates[toCurrency];
 
         if (fromRate && toRate) {
-            // Converte o valor de acordo com as taxas de câmbio
+            // Convert the amount according to the exchange rates
             const convertedAmount = (amount / fromRate) * toRate;
             return res.json({
-                convertedAmount: convertedAmount.toFixed(2), // Formata com 2 casas decimais
+                convertedAmount: convertedAmount.toFixed(2), // Format to 2 decimal places
                 fromCurrency,
                 toCurrency
             });
         } else {
-            return res.status(400).json({ error: 'Código de moeda inválido' });
+            return res.status(400).json({ error: 'Invalid currency code' });
         }
     } catch (error) {
-        return res.status(500).json({ error: 'Erro interno no servidor' });
+        return res.status(500).json({ error: 'Internal server error' });
     }
 });
 
@@ -57,5 +57,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
