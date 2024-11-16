@@ -2,24 +2,24 @@ const form = document.getElementById('converter-form');
 const resultDiv = document.getElementById('result');
 
 form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+    event.preventDefault(); // Prevents the default form submission behavior
 
-    // Obtém os valores inseridos pelo usuário e substitui a vírgula por ponto
+    // Get the values entered by the user and replace the comma with a dot
     const amountInput = document.getElementById('amount').value;
-    const amount = parseFloat(amountInput.replace(',', '.')); // Substitui vírgula por ponto antes de converter
+    const amount = parseFloat(amountInput.replace(',', '.')); // Replaces comma with dot before converting
 
     const fromCurrency = document.getElementById('fromCurrency').value.toUpperCase();
     const toCurrency = document.getElementById('toCurrency').value.toUpperCase();
 
-    // Validação para garantir que o valor inserido seja um número válido
+    // Validation to ensure the entered value is a valid number
     if (isNaN(amount) || amount <= 0) {
-        resultDiv.textContent = 'Por favor, insira um valor válido.';
+        resultDiv.textContent = 'Please enter a valid amount.';
         return;
     }
 
-    console.log({ amount, fromCurrency, toCurrency }); // Depuração: Verifica se os valores estão corretos
+    console.log({ amount, fromCurrency, toCurrency }); // Debugging: Checks if the values are correct
 
-    // Enviar a requisição POST para o servidor
+    // Send a POST request to the server
     try {
         const response = await axios.post('/convert', {
             amount,
@@ -27,12 +27,12 @@ form.addEventListener('submit', async (event) => {
             toCurrency
         });
 
-        console.log(response.data); // Depuração: Verifica a resposta do servidor
+        console.log(response.data); // Debugging: Checks the server response
 
-        // Exibir o resultado na página
+        // Display the result on the page
         const { convertedAmount, fromCurrency: returnedFromCurrency, toCurrency: returnedToCurrency } = response.data;
 
-        // Formatar o valor convertido para sempre exibir 2 casas decimais
+        // Format the converted value to always show 2 decimal places
         const formattedConvertedAmount = new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: returnedToCurrency,
@@ -40,10 +40,10 @@ form.addEventListener('submit', async (event) => {
             maximumFractionDigits: 2
         }).format(convertedAmount);
 
-        // Exibir o valor convertido de forma legível
+        // Display the converted amount in a readable format
         resultDiv.textContent = `${amount} ${returnedFromCurrency} = ${formattedConvertedAmount} ${returnedToCurrency}`;
     } catch (error) {
-        console.error(error); // Depuração: Verifica o erro
-        resultDiv.textContent = 'Erro ao buscar as taxas de câmbio ou códigos de moeda inválidos.';
+        console.error(error); // Debugging: Checks the error
+        resultDiv.textContent = 'Error retrieving exchange rates or invalid currency codes.';
     }
 });
