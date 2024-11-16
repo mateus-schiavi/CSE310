@@ -9,8 +9,8 @@ let cachedRates = null;
 // Variable to store the last time the exchange rates were fetched (in milliseconds)
 let lastFetched = 0;
 
-// Function to get exchange rates
-const getExchangeRates = async () => {
+// Function to get exchange rates with recursion for retrying failed requests
+const getExchangeRates = async (retryCount = 3) => {
     const now = Date.now(); // Get the current time
 
     // Check if the rates are not cached or if they were fetched more than 10 minutes ago (600000 ms)
@@ -30,8 +30,15 @@ const getExchangeRates = async () => {
             // Log an error if the fetch operation fails
             console.error('Fetching Error', error);
 
-            // Return null if there was an error fetching the rates
-            return null;
+            // Retry logic: If retry count is greater than 0, call the function recursively
+            if (retryCount > 0) {
+                console.log(`Retrying... attempts left: ${retryCount}`);
+                return getExchangeRates(retryCount - 1);  // Recursively retry the request
+            } else {
+                // Return null if maximum retries have been reached
+                console.error('Max retries reached. Could not fetch exchange rates.');
+                return null;
+            }
         }
     }
 
