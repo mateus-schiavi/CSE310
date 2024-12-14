@@ -1,0 +1,237 @@
+# Hangman Game
+
+Welcome to the Hangman Game. The objective is to guess the secret word by suggesting letters within a certain number of attempts.
+
+## Installation
+
+### Requirements
+- Programming Language: C++
+- Compiler: Any C++ compiler (e.g., g++, clang)
+- Standard Libraries: 
+  - `<iostream>` for input and output
+  - `<fstream>` for file operations
+  - `<string>` for string manipulation
+  - `<map>` for storing guessed letters
+  - `<vector>` for storing incorrect guesses
+  - `<ctime>` and `<cstdlib>` for random number generation
+
+### Installation Instructions
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/mateus-schiavi/CSE310.git
+
+2. Enter the following commands in the vscode terminal:
+    ```
+    cd C++_Project
+    cd hangManGame
+    ```
+3. Compile the code:
+    ```bash
+    g++ -o hangManGame hangManGame.cpp
+    ```
+
+4. Ensure that your system environment is set up to run the compiled program. You may need to adjust system paths or permissions.
+
+## Usage
+
+### How to Run
+1. Execute the compiled program:
+    ```bash
+    ./hangManGame
+    ```
+2. Follow the prompts to play the game. You will be asked to guess letters to uncover the secret word.
+
+### Example of Execution
+```plaintext
+*******************************
+* Welcome to the Hangman Game *
+*******************************
+
+Wrong Guesses:
+_ _ _ _ _ _ _ _ _
+
+Your letter: E
+Your chosen letter is on the word
+
+Wrong Guesses:
+E _ _ _ _ E _ _ _
+
+Your letter: T
+Your chosen letter is on the word
+
+Wrong Guesses:
+E _ _ T _ E _ _ _
+
+Do you want to try guessing the word? (Y/N): Y
+Enter your guess: WATERMELON
+Congratulations! You guessed the secret word!
+
+Program Behavior
+The program first welcomes the player and prints the game header.
+
+It initializes the game by reading words from a file and selecting a random word as the secret word.
+
+The player is prompted to guess letters. The program checks if the guessed letter is in the secret word.
+
+If the letter is correct, it is revealed in the word.
+
+If the letter is incorrect, it is added to the list of wrong guesses.
+
+The player can also choose to guess the entire word if they feel confident.
+
+The game ends when the player guesses the word or runs out of attempts.
+
+Code Structure
+hangManGame.cpp: Contains the main code for the game.
+
+Code Description
+Global Variables:
+
+string secret_word: Stores the current secret word.
+
+map<char, bool> option: Tracks the guessed letters.
+
+vector<char> wrong_guess: Stores the incorrect guesses.
+
+Functions:
+
+bool existing_letter(char guess): Checks if a guessed letter is in the secret word.
+
+bool not_guessed(): Checks if there are any letters left to be guessed.
+
+bool not_hung(): Checks if the player still has attempts left.
+
+int letters_remaining(): Counts the number of letters that have not been guessed.
+
+void print_header(): Prints the game header.
+
+void print_errors(): Prints the incorrect guesses.
+
+void print_word(): Prints the current state of the secret word with guessed letters revealed.
+
+void decision(): Handles the player's letter guess and updates the game state.
+
+bool guess_word(): Allows the player to guess the entire word.
+
+vector<string> read_file(): Reads the list of words from a file.
+
+void draw_words(): Selects a random word from the list as the secret word.
+
+void save_file(vector<string> new_list): Saves the updated list of words to the file.
+
+void add_word(): Adds a new word to the list of words.
+
+int main(): The main function that runs the game loop.
+
+Detailed Explanation of Key Sections
+Reading and Selecting the Secret Word
+cpp
+vector<string> read_file()
+{
+    ifstream file;
+    file.open("words.txt");
+
+    if (file.is_open())
+    {
+        int words_stored;
+        file >> words_stored;
+
+        vector<string> words_in_the_file;
+
+        for (int i = 0; i < words_stored; i++)
+        {
+            string read_word;
+            file >> read_word;
+            words_in_the_file.push_back(read_word);
+        }
+        file.close();
+        return words_in_the_file;
+    }
+    else
+    {
+        cout << "The words file could not be found!" << endl;
+        exit(0);
+    }
+}
+
+void draw_words()
+{
+    vector<string> words = read_file();
+
+    srand(time(NULL));
+    int draw_index = rand() % words.size();
+
+    secret_word = words[draw_index];
+}
+read_file(): Opens and reads the words from a file, returning them as a vector of strings.
+
+draw_words(): Selects a random word from the vector as the secret word.
+
+Main Game Loop
+cpp
+int main()
+{
+    print_header();
+
+    read_file();
+    draw_words();
+
+    while (not_guessed() && not_hung())
+    {
+        print_errors();
+        print_word();
+
+        // Check if only 3 letters are left to guess
+        if (letters_remaining() == 3)
+        {
+            if (guess_word())
+            {
+                return 0; // The player guessed the word, end the game
+            }
+        }
+
+        decision();
+    }
+
+    cout << "End of Game!" << endl;
+    cout << "The secret word was: " << secret_word << endl;
+    if (not_guessed())
+    {
+        cout << "You lose! Try Again!" << endl;
+    }
+    else
+    {
+        cout << "You won! You discovered the secret word!" << endl;
+
+        cout << "Would you like to add a new word to the game? (Y/N): ";
+        char answer;
+        cin >> answer;
+
+        if (answer == 'Y')
+        {
+            add_word();
+        }
+    }
+
+    return 0;
+}
+The game initializes by printing the header and selecting the secret word.
+
+The game loop continues while there are letters left to guess and the player has attempts remaining.
+
+The player is prompted to guess letters, and the game state is updated based on the guess.
+
+If the player successfully guesses the word, they win. Otherwise, the game displays a losing message.
+
+Contribution
+To contribute to the project, follow these steps:
+
+Fork the repository.
+
+Create a new branch (git checkout -b feature-branch).
+
+Make your changes and commit them (git commit -m 'Add some feature').
+
+Push to the branch (git push origin feature-branch).
+
+Open a pull request.

@@ -1,0 +1,216 @@
+# Number Guessing Game
+
+Welcome to the Number Guessing Game. The goal is to guess the secret number based on the chosen difficulty level.
+
+## Installation
+
+### Requirements
+- Programming Language: C++
+- Compiler: Any C++ compiler (e.g., g++, clang)
+- Standard Library: <cstdlib> for random number generation, <ctime> for time-based seed, <iostream> for input and output
+
+### Installation Instructions
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/mateus-schiavi/CSE310.git
+
+2. Enter the following commands in the vscode terminal:
+    ```
+    cd C++_Project
+    cd numberGuessingGame
+    ```
+3. Compile the code:
+    ```bash
+    g++ -o numberGuessingGame numberGuessingGame.cpp
+    ```
+
+4. Ensure that your system environment is set up to run the compiled program. You may need to adjust system paths or permissions.
+
+## Usage
+
+### How to Run
+1. Execute the compiled program:
+    ```bash
+    ./numberGuessingGame
+    ```
+2. Choose the difficulty level: Easy (E), Medium (M), or Hard (H).
+
+### Example of Execution
+```plaintext
+Welcome to the Number Guessing Game
+Choose the level you want to play:
+Easy (E), Medium (M), Hard (H)
+E
+Try 1
+Which is your guess? 50
+The value you chose is: 50
+Your guess was lower than the secret number!
+Try 2
+Which is your guess? 75
+The value you chose is: 75
+Congratulations! You discovered the secret number!
+
+Program Behavior
+The program first welcomes the player and prompts for the difficulty level.
+
+Based on the selected difficulty (E, M, H), it sets the number of allowed tries:
+
+Easy (E): 15 tries
+
+Medium (M): 10 tries
+
+Hard (H): 5 tries
+
+The program generates a secret number between 0 and 99 using rand() function seeded with the current time time(NULL).
+
+The player is asked to guess the number, and the program provides feedback:
+
+If the guess is correct, the player wins.
+
+If the guess is incorrect, the program indicates whether the guess was too high or too low.
+
+The player's score is calculated based on the difference between the guess and the secret number, with points deducted for incorrect guesses.
+
+Code Structure
+numberGuessingGame.cpp: Contains the main code for the game.
+
+Code Description
+main: Main function that runs the game.
+
+Variables:
+
+difficult: Stores the difficulty level chosen by the user.
+
+numbers_of_tries: Defines the number of allowed tries based on the difficulty level.
+
+SECRET_NUMBER: Randomly generated secret number.
+
+not_guessed, tries, points: Game control variables.
+
+guess: Stores the player's current guess.
+
+lost_points: Calculates points lost per guess based on the difference from the secret number.
+
+Game Logic:
+
+The user selects the difficulty level.
+
+The program generates a secret number.
+
+The user attempts to guess the number.
+
+The program provides feedback if the guess was higher or lower than the secret number.
+
+The game ends when the number is guessed or the attempts run out.
+
+If the player guesses the number, they receive a congratulatory message with their score. If they fail, they are encouraged to try again.
+
+Difficult Selection:
+cout << "Choose the level you want to play: " << endl;
+cout << "Easy (E), Medium (M), Hard (H)" << endl;
+char difficult;
+cin >> difficult;
+
+int numbers_of_tries;
+if (difficult == 'E') {
+    numbers_of_tries = 15;
+} else if (difficult == 'M') {
+    numbers_of_tries = 10;
+} else {
+    numbers_of_tries = 5;
+}
+
+Generating Secret Number:
+srand(time(NULL));
+const int SECRET_NUMBER = rand() % 100;
+
+The function above is responsible for generating the secret number, with a range between 0 and 99.
+
+Main game loop:
+bool not_guessed = true;
+double points = 1000.0;
+for (int tries = 1; tries <= numbers_of_tries; tries++) {
+    cout << "Try " << tries << endl;
+    int guess;
+    cout << "Which is your guess?";
+    cin >> guess;
+
+    double lost_points = abs(guess - SECRET_NUMBER) / 2.0;
+    points -= lost_points;
+
+    cout << "The value you chose is: " << guess << endl;
+
+    if (guess == SECRET_NUMBER) {
+        cout << "Congratulations! You discovered the secret number!" << endl;
+        not_guessed = false;
+        break;
+    } else if (guess > SECRET_NUMBER) {
+        cout << "Your guess was greater than the secret number!" << endl;
+    } else {
+        cout << "Your guess was lower than the secret number!" << endl;
+    }
+}
+
+bool not_guessed = true;
+double points = 1000.0;
+for (int tries = 1; tries <= numbers_of_tries; tries++) {
+    cout << "Try " << tries << endl;
+    int guess;
+    cout << "Which is your guess?";
+    cin >> guess;
+
+    double lost_points = abs(guess - SECRET_NUMBER) / 2.0;
+    points -= lost_points;
+
+    cout << "The value you chose is: " << guess << endl;
+
+    if (guess == SECRET_NUMBER) {
+        cout << "Congratulations! You discovered the secret number!" << endl;
+        not_guessed = false;
+        break;
+    } else if (guess > SECRET_NUMBER) {
+        cout << "Your guess was greater than the secret number!" << endl;
+    } else {
+        cout << "Your guess was lower than the secret number!" << endl;
+    }
+}
+
+Iterates through the number of allowed tries.
+
+Prompts the user for a guess.
+
+Calculates points lost based on the difference from the secret number.
+
+Provides feedback on whether the guess is correct, too high, or too low.
+
+Ends the game loop if the number is guessed.
+
+End of Game Messages:
+cout << "End of the game!" << endl;
+if (not_guessed) {
+    cout << "You lose! Try Again!" << endl;
+} else {
+    cout << "You discovered the secret number in " << tries << " tries" << endl;
+    cout.precision(2);
+    cout << fixed;
+    cout << "Your total points was " << points << " points." << endl;
+}
+
+Displays the end of game message.
+
+If the player did not guess the number, a losing message is shown.
+
+If the player guessed the number, the number of tries and total points are displayed.
+
+Contribution
+To contribute to the project, follow these steps:
+
+Fork the repository.
+
+Create a new branch (git checkout -b feature-branch).
+
+Make your changes and commit them (git commit -m 'Add some feature').
+
+Push to the branch (git push origin feature-branch).
+
+Open a pull request.
